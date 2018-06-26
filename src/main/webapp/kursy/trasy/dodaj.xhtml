@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+
+        <ui:composition template="./../../template.xhtml">
+
+            <ui:define name="header">
+            </ui:define>
+
+            <ui:define name="content">
+                <script type="text/javascript">
+                    function hideOrShow(show) {
+                        // Get the panel using its ID
+                        var obj = document.getElementById("route:backRoutePanel");
+                        if (show) {
+                            obj.style.display = "block";
+                        } else {
+                            obj.style.display = "none";
+                        }
+                    }
+                </script>
+                <f:view>
+                    <h:form id="route">
+                        <h1><h:outputText value="Dodaj trasę"/></h1>
+                        <h:panelGrid columns="3" style="margin-bottom:10px" cellpadding="5">
+                            <p:outputLabel value="Nazwa"/>
+                            <p:inputText id="description" value="#{addRouteBB.route.description}" required="true" requiredMessage="Pole wymagane" />
+                            <p:message for="description" style="color: red;" />
+                        </h:panelGrid>
+                        <p:dataTable id="locationsTable" rowIndexVar="lp" value="#{addRouteBB.routesLocations}" var="rLocation">
+                            <p:column headerText="Kolejność">
+                                <h:outputText value="Przystanek #{lp + 1}" />
+                            </p:column>
+                            <p:column headerText="Miejsce">
+                                <p:selectOneMenu id="from" value="#{rLocation.locations}" converter="locationConverter" panelStyle="width:180px"
+                                                 effect="fade" var="t" style="width:120px" filter="true" filterMatchMode="startsWith"  required="true">
+
+                                    <f:selectItems value="#{addRouteBB.locations}" var="location" itemLabel="#{location.city}" itemValue="#{location}" />
+                                    <p:column>
+                                        <h:outputText value="#{t.city}" />
+                                    </p:column>
+                                </p:selectOneMenu>
+                            </p:column>
+                            <p:column headerText="Odległość od poprzedniego przystanku [KM]"><p:inputText value="#{rLocation.distanceBetweenStops}" rendered="#{lp > 0}" style="width:100px" required="true" /></p:column>
+                            <p:column headerText="Czas przejazdu pomiędzy przystankami"><p:calendar id="time" value="#{rLocation.timeBetweenStops}" pattern="HH:mm"  timeOnly="true" size="5" rendered="#{lp > 0}" required="true" /></p:column>
+                            <p:column ><p:commandButton value="usuń" process="@this" update="locationsTable" actionListener="#{addRouteBB.remove(rLocation)}" rendered="#{lp > 1}" /></p:column>
+                        </p:dataTable>
+                        <p:commandButton value="dodaj przystanek" process="@this" update="locationsTable" actionListener="#{addRouteBB.add}" />
+                        <h:panelGrid columns="3">
+                            <p:outputLabel value="Czy stworzyć trasę powrotną z takimi samymi przystankami? " />
+                            <h:selectBooleanCheckbox id="agree" value="#{addRouteBB.backRoute}" onclick="hideOrShow(this.checked);"/>
+                            <p:outputLabel value="Tak" />
+                            <h:panelGroup id="backRoutePanel" style="display: none;">
+                            <p>
+                                <p:outputLabel for="description2" value="Nazwa:" />
+                                <p:inputText id="description2" value="#{addRouteBB.description2}" />
+                            </p>
+                        </h:panelGroup>
+                        </h:panelGrid>
+                            <h:commandButton value="zapisz" action="#{addRouteBB.save}" />
+                        
+                    </h:form>
+                </f:view>
+            </ui:define>
+
+            <ui:define name="footer">
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

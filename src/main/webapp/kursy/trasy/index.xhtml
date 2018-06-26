@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+
+        <ui:composition template="./../../template.xhtml">
+
+            <ui:define name="header">
+            </ui:define>
+
+            <ui:define name="content">
+                <f:view>
+                    <h:form>
+                        <h:outputLink value="dodaj.xhtml">
+                            <h:outputText value="Dodaj trasę" />
+                        </h:outputLink>
+                        <p:dataTable var="route" rowIndexVar="lp" value="#{routesBB.routes}" rows="10" widgetVar="routesTable"
+                                     paginator="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="5,10,15">
+                            <p:column headerText="Lp">
+                                <h:outputText value="#{lp + 1}" />
+                            </p:column>
+
+                            <p:column filterBy="#{route.description}" filterMatchMode="contains"  headerText="Nazwa">
+                                <h:outputText value="#{route.description}" />
+                            </p:column>
+
+                            <p:column headerText="Przystanki">
+                                <ui:repeat value="#{route.routeslocationses}" var="rLoc">
+                                    <h:outputText value="#{rLoc.locations.city}, " />
+                                </ui:repeat>   
+                            </p:column>
+                            
+                            <p:column headerText="Akcje">
+                                <h:outputLink value="edytuj.xhtml">
+                                    <h:outputText value="edytuj" />
+                                    <f:param name="id" value="#{route.idRoute}" />
+                                </h:outputLink> | 
+                                <h:commandLink value="usuń" 
+                                                 action="#{routesBB.delete}" >
+                                    <f:setPropertyActionListener 
+                                        target="#{routesBB.selected}" 
+                                        value="#{route}" />
+                                </h:commandLink>
+                            </p:column>
+                            
+                        </p:dataTable>
+                    </h:form>
+                </f:view>
+            </ui:define>
+
+            <ui:define name="footer">
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

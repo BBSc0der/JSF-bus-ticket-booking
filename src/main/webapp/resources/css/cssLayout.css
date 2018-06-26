@@ -1,0 +1,95 @@
+
+#header {
+    position: relative;
+    background-color: #036fab;
+    color: white;
+    margin: 0px 0px 10px 0px;
+}
+
+#footer {
+    position: relative;
+    height: 100px;
+    background-color: #c2dfef;
+    padding: 5px;
+    margin: 10px 0px 0px 0px;
+}
+
+#left {
+    float: left;
+    background-color: #ece3a5;
+    padding: 5px;
+    width: 150px;
+}
+
+#right {
+    float: right;
+    background-color: #ece3a5;
+    padding: 5px;
+    width: 150px;
+}
+
+.center_content {
+    position: relative;
+    padding: 5px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    min-height: 410px;
+    
+}
+
+
+#top a:link, #top a:visited {
+  color: white;
+  font-weight : bold;
+  text-decoration: none;
+}
+
+#top a:link:hover, #top a:visited:hover  {
+  color: black;
+  font-weight : bold;
+  text-decoration : underline;
+}
+#logo{
+    border-bottom: 2px white solid;
+    margin-bottom: 2px;
+    padding: 10px;
+}
+#nav{
+    border-top: 2px white solid;
+}
+#nav ul{
+    margin: 0;
+    text-indent: 0;
+    list-style: none;
+    text-align: left;
+}
+#nav ul li{
+    display: inline-block;
+    text-align: center;
+    
+}
+#nav ul li a{
+    text-decoration: none;
+    color: white;
+    display: inline-block;
+    padding: 10px;
+    min-width: 50px;
+    height: 14px;
+    cursor: pointer;
+}
+#nav ul li a:hover{
+    color: #ff9544;
+}
+input[type="submit"]{
+    background-color: #036fab;
+    border: 1px solid #014d89;
+    height: 30px;
+    min-width: 100px;
+    color: white;
+    cursor: pointer;
+}
+input[type="submit"]:hover{
+    background-color: #257fcd;
+    transition: 0.5s;
+}

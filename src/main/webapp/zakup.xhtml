@@ -1,0 +1,155 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+
+        <ui:composition template="./template.xhtml">
+
+            <ui:define name="header">
+            </ui:define>
+
+            <ui:define name="content">
+                <h2>Dane przejazdu: </h2>
+                <f:view>
+                    <h:form>
+                        <p:dataTable var="trip" value="#{buyBB.loadTripDetails()}">
+                            <p:column headerText="Odjazd">
+                                <h:outputText value="#{trip.dateOfDeparture}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Przyjazd">
+                                <h:outputText value="#{trip.dateOfArrival}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Odjazd z:">
+                                <h:outputText value="#{trip.from.city}" />
+                            </p:column>
+                            <p:column headerText="Przyjazd do:">
+                                <h:outputText value="#{trip.to.city}" />
+                            </p:column>
+                            <p:column headerText="Cena biletu:">
+                                <h:outputText value="#{trip.price}zł N "/>
+                                <h:outputText value="#{trip.price / 2}zł U"/>
+                            </p:column>
+                            <p:column headerText="Wolne miejsca:">
+                                <h:outputText value="#{trip.numberOfSeats - trip.bookedSeats}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </f:view>
+                <f:view>
+                    <h:form>
+                        <p:growl id="growl" sticky="true" showDetail="true"/>
+                        <p:wizard flowListener="#{buyBB.onFlowProcess}">
+                            <p:tab id="tickets" title="Bilety">
+                                <p:panel header="Liczba biletów">
+                                    <h:panelGrid columns="3" style="margin-bottom:10px" cellpadding="5">
+
+                                        <p:outputLabel for="normalTickets" value="Bilety normalne: " />
+                                        <p:inputNumber id="normalTickets" validator="numOfTicketsValidator" value="#{buyBB.ticket.numOfNormal}" minValue="0" maxValue="#{buyBB.loadTripDetails().numberOfSeats - buyBB.loadTripDetails().bookedSeats}" >
+                                            <f:attribute name="discountTickets" value="#{discountTickets}" />
+                                        </p:inputNumber>
+                                        <h:message for="normalTickets" style="color:red" />
+
+                                        <p:outputLabel for="discountTickets" value="Bilety ulgowe: " />
+                                        <p:inputNumber id="discountTickets" binding="#{discountTickets}" value="#{buyBB.ticket.numOfDiscount}" minValue="0" maxValue="#{buyBB.loadTripDetails().numberOfSeats - buyBB.loadTripDetails().bookedSeats}" />
+                                        <h:message for="discountTickets" style="color:red" />
+                                    </h:panelGrid>
+                                </p:panel>
+                            </p:tab>
+                            <p:tab id="info" title="Dane pasażera">
+                                <p:panel header="Dane pasażera">
+                                    <h:panelGrid columns="3" style="margin-bottom:10px" cellpadding="5">
+                                        <p:outputLabel for="name" value="Imię: " />
+                                        <p:inputText id="name" value="#{buyBB.ticket.name}"   required="true" />
+                                        <h:message for="name" style="color:red" />
+
+                                        <p:outputLabel for="surname" value="Nazwisko: " />
+                                        <p:inputText id="surname" value="#{buyBB.ticket.surname}"  required="true" />
+                                        <h:message for="surname" style="color:red" />
+
+                                        <p:outputLabel for="phone" value="Nr telefonu: " />
+                                        <p:inputMask id="phone" required="true"  value="#{buyBB.ticket.phone}"  mask="999999999"/>
+                                        <h:message for="phone" style="color:red" />
+
+                                        <p:outputLabel for="email" value="Email: " />
+                                        <p:inputText id="email" required="true" label="email"
+                                                     requiredMessage="Please enter your email address."
+                                                     validatorMessage="Invalid email format"
+                                                     value="#{buyBB.ticket.email}" >
+
+                                            <f:validateRegex
+                                                pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+
+                                        </p:inputText>
+                                        <h:message for="email" style="color:red" />
+                                    </h:panelGrid>
+                                </p:panel>
+                            </p:tab>
+                            <p:tab id="payment" title="Płatność">
+                                <p:panel header="Rodzaj płatności">
+                                    <p:selectOneRadio id="bank" required="true" requiredMessage="Należy wybrać opcję płantości!" value="#{buyBB.bank}" layout="responsive" columns="3">
+                                        <f:selectItems value="#{buyBB.banks}" var="c" itemLabel="#{bank}" itemValue="#{bank}"/>
+                                    </p:selectOneRadio>
+                                    <h:message for="bank" style="color:red" /> <br />
+                                    
+                                    <h:outputText value="Akceptuję regulamin: " />
+                                    <p:selectBooleanCheckbox id="agree" requiredMessage=" Musisz zaakceptować warunki!" value="#{buyBB.checkBox}" validator="requiredCheckboxValidator"/>
+                                    <h:message for="agree" style="color:red" /> <br />
+                                </p:panel>
+                            </p:tab>
+                            <p:tab id="confirm" title="Podsumowanie">
+                                <p:panel header="Podsumowanie">
+                                    <h:panelGrid id="confirmation" columns="2" columnClasses="grid,grid">
+                                        <h:panelGrid columns="2" columnClasses="label, value">
+                                            <h:outputText value="Bilety normalne: " />
+                                            <h:outputText value="#{buyBB.ticket.numOfNormal}" styleClass="outputLabel"/>
+
+                                            <h:outputText value="Bilety ulgowe: " />
+                                            <h:outputText value="#{buyBB.ticket.numOfDiscount}" styleClass="outputLabel"/>
+                                            
+                                            <h:outputText value="Do zapłaty: " />
+                                            <h:outputText value="#{buyBB.totalToBePaid()} zł" styleClass="outputLabel"/>
+                                        
+                                            <h:outputText value="Płatność: " />
+                                            <h:outputText value="#{buyBB.bank}" styleClass="outputLabel"/>
+                                        </h:panelGrid>
+                                        <h:panelGrid columns="2" columnClasses="label, value">
+                                            <h:outputText value="Imię: " />
+                                            <h:outputText value="#{buyBB.ticket.name}" styleClass="outputLabel"/>
+
+                                            <h:outputText value="Nazwisko: " />
+                                            <h:outputText value="#{buyBB.ticket.surname}" styleClass="outputLabel"/>
+
+                                            <h:outputText value="Telefon: " />
+                                            <h:outputText value="#{buyBB.ticket.phone}" styleClass="outputLabel"/>
+
+                                            <h:outputText value="Email: " />
+                                            <h:outputText value="#{buyBB.ticket.email}" styleClass="outputLabel"/>
+                                        </h:panelGrid>
+                                    </h:panelGrid>
+                                    <p:commandButton value="Zapłać" action="#{buyBB.pay}" update="growl" process="@this"/>
+                                </p:panel>
+                            </p:tab>
+                        </p:wizard>
+
+                    </h:form>
+                </f:view>
+
+
+            </ui:define>
+
+            <ui:define name="footer">
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

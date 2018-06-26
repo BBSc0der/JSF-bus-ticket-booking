@@ -1,0 +1,124 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+
+        <ui:composition template="./template.xhtml">
+
+            <ui:define name="header">
+
+            </ui:define>
+
+            <ui:define name="content">
+                
+                <f:view>
+                    <h:form >
+                        <h:panelGrid columns="3" style="margin-bottom:10px" cellpadding="5">
+                            <p:outputLabel for="date" value="Data wyjazdu: " />
+                            <p:calendar id="date" pattern="yyyy/MM/dd" locale="pl" value="#{indexBacking.searchForm.departure}" mindate="#{indexBacking.currentDate}" required="true"/>
+                            <h:message for="date" style="color:red" />
+
+                            <p:outputLabel for="from" value="Odjazd z:"  />
+                            <p:selectOneMenu id="from" value="#{indexBacking.searchForm.from}" converter="locationConverter" panelStyle="width:180px"
+                                             effect="fade" var="t" style="width:160px" filter="true" filterMatchMode="startsWith"  required="true">
+
+                                <f:selectItems value="#{indexBacking.locations}" var="location" itemLabel="#{location.city}" itemValue="#{location}" />
+                                <p:column>
+                                    <h:outputText value="#{t.city}" />
+                                </p:column>
+                            </p:selectOneMenu>
+                            <h:message for="from" style="color:red" />
+                            <p:outputLabel for="to" value="Przyjazd do:"  />
+                            <p:selectOneMenu id="to" value="#{indexBacking.searchForm.to}" converter="locationConverter" panelStyle="width:180px"
+                                             effect="fade" var="t" style="width:160px" filter="true" filterMatchMode="startsWith" required="true">
+
+                                <f:selectItems value="#{indexBacking.locations}" var="location" itemLabel="#{location.city}" itemValue="#{location}" />
+                                <p:column>
+                                    <h:outputText value="#{t.city}" />
+                                </p:column>
+                            </p:selectOneMenu>
+                            <h:message for="to" style="color:red" />
+                            <h:commandButton value="Znajdź połączenie" action="#{indexBacking.search}" />
+                        </h:panelGrid>
+                    </h:form>
+                </f:view>
+
+                <f:view >
+
+
+                    <h:form rendered="#{indexBacking.searchedTrips != null}">
+                        <h1><h:outputText value="Dostępne połączenia:"/></h1>
+                        <p:dataTable value="#{indexBacking.searchedTrips}" var="item">
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Odjazd:"/>
+                                </f:facet>
+                                <h:outputText value="#{item.dateOfDeparture}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Przyjazd:"/>
+                                </f:facet>
+                                <h:outputText value="#{item.dateOfArrival}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Odjazd z:"/>
+                                </f:facet>
+                                <h:outputText value="#{item.from.city}" />
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Przyjazd do:"/>
+                                </f:facet>
+                                <h:outputText value="#{item.to.city}" />
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Cena biletu"/>
+                                </f:facet>
+                                <h:outputText value="#{item.price}zł N "/>
+                                <h:outputText value="#{item.price / 2}zł U"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Wolne miejsca:"/>
+                                </f:facet>
+                                <h:outputText value="#{item.numberOfSeats - item.bookedSeats}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value=""/>
+                                </f:facet>
+                                <h:outputLink value="zakup.xhtml">
+                                    <h:outputText value="Kup bilet" />
+                                    <f:param name="id" value="#{item.idTrip}" />
+                                    <f:param name="from" value="#{item.from.idLocation}" />
+                                    <f:param name="to" value="#{item.to.idLocation}" />
+                                </h:outputLink>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </f:view>
+
+
+            </ui:define>
+
+            <ui:define name="footer">
+                bottom
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>
