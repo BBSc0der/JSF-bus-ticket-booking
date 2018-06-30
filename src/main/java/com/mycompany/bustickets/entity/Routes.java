@@ -5,6 +5,7 @@ package com.mycompany.bustickets.entity;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -77,6 +78,24 @@ public class Routes  implements java.io.Serializable {
     
     public void setTripses(Set<Trips> tripses) {
         this.tripses = tripses;
+    }
+    
+        @Override
+    public String toString() {
+        return this.description;
+    }
+    @Override
+    public boolean equals(Object other) {
+        return (idRoute != null && other != null && getClass() == other.getClass())
+         ? idRoute.equals(((Routes) other).idRoute)
+         : (other == this);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 47 * hash + Objects.hashCode(this.description);
+        return hash;
     }
 
 

@@ -6,9 +6,14 @@
 package com.mycompany.bustickets.backing.trips;
 
 import com.mycompany.bustickets.entity.Locations;
+import com.mycompany.bustickets.entity.Routes;
+import com.mycompany.bustickets.entity.Trips;
 import com.mycompany.bustickets.service.LocationsService;
+import com.mycompany.bustickets.service.RoutesService;
 import com.mycompany.bustickets.service.TripsService;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -23,25 +28,40 @@ import javax.enterprise.context.RequestScoped;
 @Named(value = "addTrip")
 @RequestScoped
 public class AddTrip {
-    
+
     private List<Locations> locations;
     private String currentDate;
     private Date departure;
     private Locations from;
     private Locations to;
-    
+    private Trips trip;
+    private List<Routes> routes;
+
     @EJB
     private LocationsService locationsService;
     @EJB
     private TripsService tripsService;
-    
+    @EJB
+    private RoutesService routesService;
+
     public AddTrip() {
     }
+
     @PostConstruct
     public void init() {
-        locations = locationsService.findAll();
-        currentDate = new SimpleDateFormat("yyyy/MM/dd").format(new Date());
+        trip = new Trips();
+        trip.setBookedSeats(0);
+        trip.setPrice(BigDecimal.ZERO);
+        trip.setNumberOfSeats(20);
         
+        locations = locationsService.findAll();
+        routes = routesService.findAll();
+        currentDate = new SimpleDateFormat("yyyy/MM/dd").format(new Date());
+    }
+    
+    public String addNewTrip(){
+        
+        return "";
     }
 
     public List<Locations> getLocations() {
@@ -98,6 +118,22 @@ public class AddTrip {
 
     public void setTripsService(TripsService tripsService) {
         this.tripsService = tripsService;
+    }
+
+    public Trips getTrip() {
+        return trip;
+    }
+
+    public void setTrip(Trips trip) {
+        this.trip = trip;
+    }
+
+    public List<Routes> getRoutes() {
+        return routes;
+    }
+
+    public void setRoutes(List<Routes> routes) {
+        this.routes = routes;
     }
     
 }

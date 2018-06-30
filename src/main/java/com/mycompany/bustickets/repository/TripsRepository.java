@@ -8,12 +8,10 @@ package com.mycompany.bustickets.repository;
 import com.mycompany.bustickets.converters.DateHelper;
 import com.mycompany.bustickets.customforms.SearchForm;
 import com.mycompany.bustickets.entity.Trips;
-import com.mycompany.bustickets.entity.Routeslocations;
 import com.mycompany.bustickets.hibernate.HibernateUtil;
 import java.io.Serializable;
-import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -73,7 +71,7 @@ public class TripsRepository implements Serializable {
 
         @SuppressWarnings("unchecked")
 
-        List<Trips> trips = null;
+        List<Trips> trips = new ArrayList<>();
         if (query.list().size() > 0) {
             trips = query.list();
         }
@@ -102,7 +100,7 @@ public class TripsRepository implements Serializable {
 
         @SuppressWarnings("unchecked")
 
-        List<Trips> trips = null;
+        List<Trips> trips = new ArrayList<>();
         if (query.list().size() > 0) {
             trips = query.list();
         }
