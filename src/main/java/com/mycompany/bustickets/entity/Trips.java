@@ -135,10 +135,6 @@ public class Trips  implements java.io.Serializable {
     public Trips cloneWithoutId(){
         return new Trips(routes, dateOfDeparture, numberOfSeats, bookedSeats, price);
     }
-
-
-
-
 }
 
 
