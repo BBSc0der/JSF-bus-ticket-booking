@@ -13,6 +13,9 @@ import com.mycompany.bustickets.entity.Routeslocations;
 import com.mycompany.bustickets.entity.Trips;
 import com.mycompany.bustickets.repository.LocationsRepository;
 import com.mycompany.bustickets.repository.TripsRepository;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -37,6 +40,7 @@ public class TripsService {
         tripsRepository = new TripsRepository();
         locationsRepository = new LocationsRepository();
     }
+
     public Trips saveOrUpdate(Trips toSave) {
         return tripsRepository.saveOrUpdate(toSave);
     }
@@ -113,12 +117,35 @@ public class TripsService {
             }
         }
 
-        finalPrice = (int) ( trip.getPrice().doubleValue() * ((double) kilometers / (double) lengthOfRoute));
+        finalPrice = (int) (trip.getPrice().doubleValue() * ((double) kilometers / (double) lengthOfRoute));
 
         newTrip.setDateOfDeparture(dateOfDeparture);
         newTrip.setDateOfArrival(dateOfArrival);
         newTrip.setPrice(finalPrice);
-        
+
         return newTrip;
+    }
+
+    public void addNewTrips(Trips trip, List<String> daysOfWeek) {
+        tripsRepository.saveOrUpdate(trip);
+        if (!daysOfWeek.isEmpty()) {
+            ZonedDateTime  localDate = ZonedDateTime.ofInstant(trip.getDateOfDeparture().toInstant(),ZoneId.systemDefault());
+            int chosenDay = localDate.getDayOfWeek().getValue();
+            
+            ZonedDateTime dateOfDay;
+            for (String day : daysOfWeek) {
+                if (Integer.valueOf(day) != chosenDay) {
+                    if (Integer.valueOf(day) > chosenDay) {
+                        dateOfDay = localDate.plusDays((Integer.valueOf(day) - chosenDay));
+                    } else {
+                        dateOfDay = localDate.minusDays((chosenDay - Integer.valueOf(day)));
+                    }
+                    System.out.println(dateOfDay);
+                    Trips clone = trip.cloneWithoutId();
+                    clone.setDateOfDeparture(Date.from(dateOfDay.toInstant()));
+                    tripsRepository.saveOrUpdate(clone);
+                }
+            }
+        }
     }
 }

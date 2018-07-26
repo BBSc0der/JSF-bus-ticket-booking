@@ -127,6 +127,15 @@ public class Trips  implements java.io.Serializable {
         this.ticketses = ticketses;
     }
 
+    @Override
+    public String toString() {
+        return "Trips{" + "idTrip=" + idTrip + ", routes=" + routes + ", dateOfDeparture=" + dateOfDeparture + ", numberOfSeats=" + numberOfSeats + ", bookedSeats=" + bookedSeats + ", price=" + price + ", ticketses=" + ticketses + '}';
+    }
+
+    public Trips cloneWithoutId(){
+        return new Trips(routes, dateOfDeparture, numberOfSeats, bookedSeats, price);
+    }
+
 
 
 

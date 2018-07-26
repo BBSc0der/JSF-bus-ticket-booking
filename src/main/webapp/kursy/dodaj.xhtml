@@ -18,7 +18,7 @@
                     <h:form >
                         <h:panelGrid columns="3" style="margin-bottom:10px" cellpadding="5">
                             <p:outputLabel for="date" value="Data wyjazdu: " />
-                            <p:calendar id="date" pattern="yyyy/MM/dd HH:mm" locale="pl" value="#{addTrip.departure}" mindate="#{addTrip.currentDate}" required="true"/>
+                            <p:calendar id="date" pattern="yyyy/MM/dd HH:mm" locale="pl" value="#{addTrip.trip.dateOfDeparture}" mindate="#{addTrip.currentDate}" required="true"/>
                             <h:message for="date" style="color:red" />
 
                             <p:outputLabel for="routes" value="Trasa: " />
@@ -30,17 +30,33 @@
                                     <h:outputText value="#{r.description}" />
                                 </p:column>
                             </p:selectOneMenu>
-                            
+
                             <h:message for="routes" style="color:red" />
 
                             <p:outputLabel for="numberOfSeats" value="Liczba miejsc: " />
                             <h:inputText id="numberOfSeats" value="#{addTrip.trip.numberOfSeats}" required="true"/>
                             <h:message for="numberOfSeats" style="color:red" />
 
+                            
                             <p:outputLabel for="price" value="Cena podstawowa: " />
                             <h:inputText id="price" value="#{addTrip.trip.price}" required="true"/>
                             <h:message for="price" style="color:red" />
+                            
+                            <p:outputLabel for="days" value="Powtórz dla dni wybranego tygodnia:" />
+                            <p:selectManyButton id="days" value="#{addTrip.daysOfWeek}">
+                                <f:selectItem itemLabel="poniedziałek" itemValue="1" />
+                                <f:selectItem itemLabel="wtorek" itemValue="2" />
+                                <f:selectItem itemLabel="środa" itemValue="3" />
+                                <f:selectItem itemLabel="czwartek" itemValue="4" />
+                                <f:selectItem itemLabel="piątek" itemValue="5" />
+                                <f:selectItem itemLabel="sobota" itemValue="6" />
+                                <f:selectItem itemLabel="niedziela" itemValue="7" />
+                            </p:selectManyButton>
+                            <h:message for="days" style="color:red" />
+                            
                             <h:commandButton value="Dodaj przejazd" action="#{addTrip.addNewTrip}" />
+
+
                         </h:panelGrid>
                     </h:form>
                 </f:view>

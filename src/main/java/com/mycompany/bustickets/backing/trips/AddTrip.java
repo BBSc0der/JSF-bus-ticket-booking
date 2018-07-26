@@ -13,6 +13,8 @@ import com.mycompany.bustickets.service.RoutesService;
 import com.mycompany.bustickets.service.TripsService;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,6 +38,7 @@ public class AddTrip {
     private Locations to;
     private Trips trip;
     private List<Routes> routes;
+    private List<String> daysOfWeek;
 
     @EJB
     private LocationsService locationsService;
@@ -60,7 +63,7 @@ public class AddTrip {
     }
     
     public String addNewTrip(){
-        
+        tripsService.addNewTrips(trip, daysOfWeek);
         return "";
     }
 
@@ -135,5 +138,12 @@ public class AddTrip {
     public void setRoutes(List<Routes> routes) {
         this.routes = routes;
     }
-    
+
+    public List<String> getDaysOfWeek() {
+        return daysOfWeek;
+    }
+
+    public void setDaysOfWeek(List<String> daysOfWeek) {
+        this.daysOfWeek = daysOfWeek;
+    }
 }
